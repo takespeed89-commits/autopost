@@ -1,0 +1,20 @@
+name: 鍵の確認
+
+# 投稿せずに、Instagram の鍵が使えるかだけを確かめる（手で動かす）
+on:
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: カンファの Instagram
+        env:
+          TOKEN: ${{ secrets.CONFA_IG_ACCESS_TOKEN }}
+          IG_ID: ${{ secrets.CONFA_IG_USER_ID }}
+        run: |
+          if [ -z "$TOKEN" ] || [ -z "$IG_ID" ]; then echo "CONFA_IG_ACCESS_TOKEN か CONFA_IG_USER_ID が未設定"; exit 1; fi
+          res=$(curl -sS "https://graph.facebook.com/v24.0/${IG_ID}?fields=username,name&access_token=${TOKEN}")
+          echo "$res" | jq -c '{username, name, error: .error.message}'
+          echo "$res" | jq -e '.username' > /dev/null
