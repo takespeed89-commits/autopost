@@ -18,6 +18,9 @@ function hashtags(t) {
 function checkBanned(name, account, text) {
   const list = [...C.banned, ...(rules[account]?.banned || [])];
   for (const w of list) if (text.includes(w)) errors.push(`${name}: 使わない言葉「${w}」`);
+  // 金額を書くなら税別と税込を両方（ラウンド）
+  if (rules[account]?.requireTaxBoth && /[0-9０-９,，]+円/.test(text) && !(text.includes('税別') && text.includes('税込')))
+    errors.push(`${name}: 金額を書くときは税別と税込を両方書く`);
 }
 
 function checkImages(name, list) {

@@ -129,20 +129,20 @@ async function igCreate(host, token, userId, params) {
 // 鍵は2種類に対応する。
 //  ・<PREFIX>_USER_ID があるとき：ビジネス向け Facebook ログインのシステムユーザーの鍵（期限なし）。graph.facebook.com を使う
 //  ・ないとき：Instagram ログインの鍵（60日）。graph.instagram.com を使う
-function igHost(prefix) {
-  return env[`${prefix}_USER_ID`] ? 'https://graph.facebook.com' : 'https://graph.instagram.com';
-}
-
-async function postToInstagram(prefix, item) {
-  const token = env[`${prefix}_ACCESS_TOKEN`];
-  if (!token) return { skip: `鍵（${prefix}_ACCESS_TOKEN）が未設定` };
-  const host = igHost(prefix);
+//  ・accounts.json に tokenSecret（鍵の Secrets 名）と userId（Instagram アカウントのID）があればそれを使う。
+//    システムユーザーの鍵1つで、割り当てた複数のアカウント（カンファ・ラウンド）に投稿できる
+async function postToInstagram(prefix, item, conf = {}) {
+  const tokenName = conf.tokenSecret || `${prefix}_ACCESS_TOKEN`;
+  const token = env[tokenName];
+  if (!token) return { skip: `鍵（${tokenName}）が未設定` };
+  const presetId = conf.userId || env[`${prefix}_USER_ID`];
+  const host = presetId ? 'https://graph.facebook.com' : 'https://graph.instagram.com';
   const images = item.images || (item.image ? [item.image] : []);
   if (!images.length) throw new Error('Instagram は画像が必須');
   if (!MEDIA_BASE) throw new Error('画像の公開URL（MEDIA_BASE_URL）が決められない');
   const urls = images.map((f) => MEDIA_BASE + f.replace(/^\/+/, ''));
   if (DRY) return { dry: true, caption: item.caption, urls };
-  let userId = env[`${prefix}_USER_ID`];
+  let userId = presetId;
   if (!userId) {
     const me = await igFetch(`${host}/${IG_VERSION}/me?fields=user_id,username&access_token=${token}`);
     userId = me.user_id || me.id;
@@ -204,7 +204,7 @@ async function main() {
         continue;
       }
       try {
-        const r = await PLATFORMS[platform](conf.secretPrefix, post[platform]);
+        const r = await PLATFORMS[platform](conf.secretPrefix, post[platform], conf);
         if (r.skip) {
           post.result[platform] = { status: 'no-key', note: r.skip };
           log(`- ${name} ${platform}: ${r.skip}`);

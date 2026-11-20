@@ -1,4 +1,4 @@
-# autopost — カンファ・PlugRig の自動投稿
+# autopost — カンファ・PlugRig・ラウンドの自動投稿
 
 X と Instagram に、予約した投稿を自動で出す仕組み。文章と画像は Claude が毎週書く。
 
@@ -17,6 +17,7 @@ X と Instagram に、予約した投稿を自動で出す仕組み。文章と�
 | --- | --- | --- |
 | カンファ | 毎日 12:10 | 月・水・金 20:30 |
 | PlugRig | 毎日 20:30 | なし（X だけ） |
+| ラウンド | なし | 火・木 12:10 |
 
 - X の API は従量課金：投稿1本 0.015ドル、URL入りは 0.2ドル、画像のアップロード 0.005ドル。URL入りは各アカウント週1本までにしているので、2アカウントで月 2〜3ドル程度
 - Instagram の API は無料。GitHub Actions は公開リポジトリなら無料
@@ -47,12 +48,12 @@ Meta の新しいアプリは「ビジネス向け Facebook ログイン（統�
 4. ビジネス設定 → システムユーザーで管理者のシステムユーザーを作り、カンファの Instagram とアプリを割り当てて、`instagram_basic` と `instagram_content_publish` のトークンを作る
 5. トークンを `CONFA_IG_ACCESS_TOKEN`、Instagram アカウントのIDを `CONFA_IG_USER_ID` に入れる
 
-ラウンド（@round.confa）の Instagram もポートフォリオに入っているが、自動投稿はしない。
+ラウンド（@round.confa）もシステムユーザー autopost に割り当ててあり、同じ鍵（CONFA_IG_ACCESS_TOKEN）で投稿する。アカウントIDは accounts.json の userId。
 
 ### 4. 試しに動かす
 Actions →「予約投稿」→ Run workflow（「試しに動かす」にチェック）。何が投稿されるかが記録に出る。
 
 ## ファイル
 - `queue/` 予約中の投稿　`posted/` 出した投稿　`media/` 画像
-- `brands/confa.md` `brands/plugrig.md` 書き方の決まり　`brands/rules.json` 機械で止める言葉
+- `brands/confa.md` `brands/plugrig.md` `brands/round.md` 書き方の決まり　`brands/rules.json` 機械で止める言葉
 - `scripts/post.mjs` 投稿　`scripts/validate.mjs` 検査　`scripts/render_card.py` 画像づくり

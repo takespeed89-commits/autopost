@@ -5,9 +5,9 @@
 
 ## 1. 材料を集める
 1. このリポジトリを最新にする（git pull）
-2. `brands/confa.md` `brands/plugrig.md` `brands/rules.json` を読む
+2. `brands/confa.md` `brands/plugrig.md` `brands/round.md` `brands/rules.json` を読む
 3. `posted/` の直近30日分を読み、同じ話題・同じ書き出しを繰り返さない。`result` に `failed` があれば、まとめの報告に書く
-4. 製品の更新を見る：takespeed89-commits/confa と takespeed89-commits/plugledger の直近7日のコミット（`git log --since="8 days ago" --oneline`）。利用者に見える変更だけを「機能を足した」ネタにする。内部の修正・セキュリティの話は書かない
+4. 製品の更新を見る：takespeed89-commits/confa・plugledger・round の直近7日のコミット（`git log --since="8 days ago" --oneline`）。利用者に見える変更だけを「機能を足した」ネタにする。内部の修正・セキュリティの話は書かない
 5. 必要なら confa.jp / plugrig.app を開いて、書く事実が今も正しいか確かめる
 
 ## 2. 本数と時刻（日本時間）
@@ -15,11 +15,12 @@
 | --- | --- | --- |
 | confa | 毎日 12:10 | 月・水・金 20:30（カルーセル 3〜5枚） |
 | plugrig | 毎日 20:30（うち英語を週2本） | なし（PlugRig は X だけ） |
+| round | なし（X はない） | 火・木 12:10（カルーセル 4〜5枚。院長向け） |
 
 - 投稿は GitHub Actions が 7:40 / 12:10 / 20:30 に動くときに出る。at はこの3つのどれかにする
 - X でURLを入れる投稿は、1アカウント週1本まで（1本0.2ドルかかる。ほかは0.015ドル）。URLのない投稿では「プロフィールのリンクから」と書く
 - X に画像を付けるのは週2本まで（カンファは Instagram と同じ画像を使ってよい。PlugRig は X 用に画像を作る）
-- ラウンド（@round.confa）の Instagram は自動投稿しない（手で運用）
+- ラウンドは事実を brands/round.md（原本は round リポジトリの docs/site-copy.md）からだけ取る。金額は税別・税込を併記
 
 ## 3. ファイルの形
 `queue/<YYYYMMDD>-<HHMM>-<account>.json`

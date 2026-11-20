@@ -18,3 +18,10 @@ jobs:
           res=$(curl -sS "https://graph.facebook.com/v24.0/${IG_ID}?fields=username,name&access_token=${TOKEN}")
           echo "$res" | jq -c '{username, name, error: .error.message}'
           echo "$res" | jq -e '.username' > /dev/null
+      - name: ラウンドの Instagram（同じ鍵）
+        env:
+          TOKEN: ${{ secrets.CONFA_IG_ACCESS_TOKEN }}
+        run: |
+          res=$(curl -sS "https://graph.facebook.com/v24.0/17841438801486999?fields=username,name&access_token=${TOKEN}")
+          echo "$res" | jq -c '{username, name, error: .error.message}'
+          echo "$res" | jq -e '.username' > /dev/null

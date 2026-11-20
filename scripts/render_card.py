@@ -35,10 +35,25 @@ BRANDS = {
         "accent": (217, 154, 0),
         "accent2": (242, 178, 51),
         "panel": (30, 32, 38),
+        "body_ink": (214, 212, 206),
         "logo": "assets/plugrig-logo-white.svg",
         "logo_w": 300,
         "footer": "plugrig.app",
         "title_font": "NotoSansCJK-Black.ttc",
+        "body_font": "NotoSansCJK-Medium.ttc",
+    },
+    "round": {
+        "bg": (255, 255, 255),
+        "bg2": (237, 247, 252),
+        "ink": (31, 41, 55),
+        "soft": (90, 100, 115),
+        "accent": (20, 163, 160),
+        "accent2": (30, 58, 95),
+        "panel": (255, 255, 255),
+        "text_logo": "ROUND",
+        "logo_font": "assets/PlayfairDisplay-Bold-latin.ttf",
+        "footer": "round.confa.jp",
+        "title_font": "NotoSansCJK-Bold.ttc",
         "body_font": "NotoSansCJK-Medium.ttc",
     },
     "confa": {
@@ -171,9 +186,25 @@ def background(b):
     return img
 
 
+def text_logo(b):
+    """ROUND のロゴ（Playfair Display 700、字間0.02em、大文字のみ）を画像にする"""
+    f = ImageFont.truetype(os.path.join(ROOT, b["logo_font"]), 64)
+    tmp = ImageDraw.Draw(Image.new("RGBA", (1, 1)))
+    adv = [tmp.textlength(c, font=f) + 64 * 0.02 for c in b["text_logo"]]
+    w = int(sum(adv)) + 4
+    asc, desc = f.getmetrics()
+    im = Image.new("RGBA", (w, asc + desc), (0, 0, 0, 0))
+    d = ImageDraw.Draw(im)
+    x = 0
+    for c, a in zip(b["text_logo"], adv):
+        d.text((x, asc), c, font=f, fill=b["accent2"], anchor="ls")
+        x += a
+    return im.crop(im.getbbox())
+
+
 def header(img, draw, brand, b, page=None, total=None):
     M = 80
-    logo = svg_logo(b["logo"], b["logo_w"])
+    logo = text_logo(b) if b.get("text_logo") else svg_logo(b["logo"], b["logo_w"])
     img.paste(logo, (M, M), logo)
     if b.get("wordmark"):
         wf = font("NotoSansCJK-Bold.ttc", 40)
@@ -204,7 +235,7 @@ def render_slide(brand, s, page, total):
     top = header(img, draw, brand, b, page, total) + 120
     t = s.get("type", "cover")
     bottom = H - 190  # 区切り線の少し上まで
-    ink2 = b["ink"] if brand == "confa" else (214, 212, 206)
+    ink2 = b.get("body_ink", b["ink"])
 
     if t == "cover":
         y = top + 60
@@ -262,6 +293,9 @@ def render_slide(brand, s, page, total):
     else:
         raise SystemExit(f"不明な type: {t}")
 
+    if s.get("note"):
+        nf = font("NotoSansCJK-Medium.ttc", 28)
+        draw.text((W - M, H - 100), s["note"], font=nf, fill=b["soft"], anchor="rm")
     footer(draw, b, s.get("footer"))
     return img
 

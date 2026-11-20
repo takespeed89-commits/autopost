@@ -1,5 +1,5 @@
 {
-  "_説明": "投稿先の設定。enabled を false にするとその投稿先だけ止まる。鍵は GitHub の Secrets に入れる（名前は secretPrefix + _API_KEY など。README 参照）",
+  "_説明": "投稿先の設定。enabled を false にするとその投稿先だけ止まる。X の鍵は Secrets の <secretPrefix>_API_KEY など。Instagram はシステムユーザーの鍵1つ（CONFA_IG_ACCESS_TOKEN）でカンファとラウンドの両方に投稿する（userId は各アカウントのID）",
   "confa": {
     "name": "カンファ",
     "x": {
@@ -10,7 +10,8 @@
     "instagram": {
       "enabled": true,
       "secretPrefix": "CONFA_IG",
-      "handle": ""
+      "handle": "confa.jp",
+      "userId": "17841458931514010"
     }
   },
   "plugrig": {
@@ -19,6 +20,16 @@
       "enabled": true,
       "secretPrefix": "PLUGRIG_X",
       "handle": ""
+    }
+  },
+  "round": {
+    "name": "ラウンド",
+    "instagram": {
+      "enabled": true,
+      "secretPrefix": "ROUND_IG",
+      "tokenSecret": "CONFA_IG_ACCESS_TOKEN",
+      "userId": "17841438801486999",
+      "handle": "round.confa"
     }
   }
 }
