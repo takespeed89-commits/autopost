@@ -1,0 +1,56 @@
+name: 予約投稿
+
+on:
+  schedule:
+    # 日本時間 7:40 / 12:10 / 20:30（GitHub の起動は数分〜数十分遅れることがある）
+    - cron: '40 22 * * *'
+    - cron: '10 3 * * *'
+    - cron: '30 11 * * *'
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: '試しに動かす（投稿しない）'
+        type: boolean
+        default: true
+
+permissions:
+  contents: write
+
+concurrency:
+  group: autopost
+  cancel-in-progress: false
+
+jobs:
+  post:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: 投稿する
+        env:
+          DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run }}
+          CONFA_X_API_KEY: ${{ secrets.CONFA_X_API_KEY }}
+          CONFA_X_API_SECRET: ${{ secrets.CONFA_X_API_SECRET }}
+          CONFA_X_ACCESS_TOKEN: ${{ secrets.CONFA_X_ACCESS_TOKEN }}
+          CONFA_X_ACCESS_SECRET: ${{ secrets.CONFA_X_ACCESS_SECRET }}
+          PLUGRIG_X_API_KEY: ${{ secrets.PLUGRIG_X_API_KEY }}
+          PLUGRIG_X_API_SECRET: ${{ secrets.PLUGRIG_X_API_SECRET }}
+          PLUGRIG_X_ACCESS_TOKEN: ${{ secrets.PLUGRIG_X_ACCESS_TOKEN }}
+          PLUGRIG_X_ACCESS_SECRET: ${{ secrets.PLUGRIG_X_ACCESS_SECRET }}
+          CONFA_IG_ACCESS_TOKEN: ${{ secrets.CONFA_IG_ACCESS_TOKEN }}
+          PLUGRIG_IG_ACCESS_TOKEN: ${{ secrets.PLUGRIG_IG_ACCESS_TOKEN }}
+          MEDIA_BASE_URL: ${{ vars.MEDIA_BASE_URL }}
+        run: node scripts/post.mjs
+      - name: 結果を記録する
+        if: always()
+        run: |
+          git config user.name "autopost-bot"
+          git config user.email "autopost-bot@users.noreply.github.com"
+          git add -A queue posted
+          if git diff --cached --quiet; then echo "変更なし"; exit 0; fi
+          git commit -m "投稿の記録 $(TZ=Asia/Tokyo date '+%Y-%m-%d %H:%M')"
+          git pull --rebase --autostash
+          git push
