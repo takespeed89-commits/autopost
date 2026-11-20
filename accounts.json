@@ -3,9 +3,10 @@
   "confa": {
     "name": "カンファ",
     "x": {
-      "enabled": true,
+      "enabled": false,
       "secretPrefix": "CONFA_X",
-      "handle": ""
+      "handle": "",
+      "note": "2026-11-20 当面作らない（フォロワー0から育てる手間に見合わないため）。作ったら handle を入れて true にする"
     },
     "instagram": {
       "enabled": true,
