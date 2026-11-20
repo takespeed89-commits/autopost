@@ -14,22 +14,23 @@
 | アカウント | X | Instagram |
 | --- | --- | --- |
 | confa | 毎日 12:10 | 月・水・金 20:30（カルーセル 3〜5枚） |
-| plugrig | 毎日 20:30（うち英語を週2本） | 火・木・土 20:30（カルーセル 3〜5枚） |
+| plugrig | 毎日 20:30（うち英語を週2本） | なし（PlugRig は X だけ） |
 
 - 投稿は GitHub Actions が 7:40 / 12:10 / 20:30 に動くときに出る。at はこの3つのどれかにする
 - X でURLを入れる投稿は、1アカウント週1本まで（1本0.2ドルかかる。ほかは0.015ドル）。URLのない投稿では「プロフィールのリンクから」と書く
-- X に画像を付けるのは週2本まで（Instagram と同じ画像を使ってよい）
+- X に画像を付けるのは週2本まで（カンファは Instagram と同じ画像を使ってよい。PlugRig は X 用に画像を作る）
+- ラウンド（@round.confa）の Instagram は自動投稿しない（手で運用）
 
 ## 3. ファイルの形
 `queue/<YYYYMMDD>-<HHMM>-<account>.json`
 
 ```json
 {
-  "account": "plugrig",
-  "at": "2026-11-24T20:30:00+09:00",
-  "theme": "PC移行",
-  "x": { "text": "本文", "images": ["media/20261124-plugrig-1.jpg"] },
-  "instagram": { "caption": "キャプション", "images": ["media/20261124-plugrig-1.jpg", "media/20261124-plugrig-2.jpg"] }
+  "account": "confa",
+  "at": "2026-11-23T20:30:00+09:00",
+  "theme": "出品できるもの",
+  "x": { "text": "本文", "images": ["media/20261123-confa-1.jpg"] },
+  "instagram": { "caption": "キャプション", "images": ["media/20261123-confa-1.jpg", "media/20261123-confa-2.jpg"] }
 }
 ```
 - x と instagram はどちらか片方だけでもよい。同じ時刻に両方出すなら1ファイルにまとめる

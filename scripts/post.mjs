@@ -110,9 +110,9 @@ async function igFetch(url, opts = {}) {
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
-async function igWaitReady(token, id) {
+async function igWaitReady(host, token, id) {
   for (let i = 0; i < 30; i++) {
-    const s = await igFetch(`https://graph.instagram.com/${IG_VERSION}/${id}?fields=status_code&access_token=${token}`);
+    const s = await igFetch(`${host}/${IG_VERSION}/${id}?fields=status_code&access_token=${token}`);
     if (s.status_code === 'FINISHED') return;
     if (s.status_code === 'ERROR' || s.status_code === 'EXPIRED') throw new Error(`Instagram 準備失敗 ${s.status_code}`);
     await sleep(3000);
@@ -120,36 +120,47 @@ async function igWaitReady(token, id) {
   throw new Error('Instagram 準備がタイムアウト');
 }
 
-async function igCreate(token, userId, params) {
+async function igCreate(host, token, userId, params) {
   const body = new URLSearchParams({ ...params, access_token: token });
-  const r = await igFetch(`https://graph.instagram.com/${IG_VERSION}/${userId}/media`, { method: 'POST', body });
+  const r = await igFetch(`${host}/${IG_VERSION}/${userId}/media`, { method: 'POST', body });
   return r.id;
+}
+
+// 鍵は2種類に対応する。
+//  ・<PREFIX>_USER_ID があるとき：ビジネス向け Facebook ログインのシステムユーザーの鍵（期限なし）。graph.facebook.com を使う
+//  ・ないとき：Instagram ログインの鍵（60日）。graph.instagram.com を使う
+function igHost(prefix) {
+  return env[`${prefix}_USER_ID`] ? 'https://graph.facebook.com' : 'https://graph.instagram.com';
 }
 
 async function postToInstagram(prefix, item) {
   const token = env[`${prefix}_ACCESS_TOKEN`];
   if (!token) return { skip: `鍵（${prefix}_ACCESS_TOKEN）が未設定` };
+  const host = igHost(prefix);
   const images = item.images || (item.image ? [item.image] : []);
   if (!images.length) throw new Error('Instagram は画像が必須');
   if (!MEDIA_BASE) throw new Error('画像の公開URL（MEDIA_BASE_URL）が決められない');
   const urls = images.map((f) => MEDIA_BASE + f.replace(/^\/+/, ''));
   if (DRY) return { dry: true, caption: item.caption, urls };
-  const me = await igFetch(`https://graph.instagram.com/${IG_VERSION}/me?fields=user_id,username&access_token=${token}`);
-  const userId = me.user_id || me.id;
+  let userId = env[`${prefix}_USER_ID`];
+  if (!userId) {
+    const me = await igFetch(`${host}/${IG_VERSION}/me?fields=user_id,username&access_token=${token}`);
+    userId = me.user_id || me.id;
+  }
   let creationId;
   if (urls.length === 1) {
-    creationId = await igCreate(token, userId, { image_url: urls[0], caption: item.caption });
+    creationId = await igCreate(host, token, userId, { image_url: urls[0], caption: item.caption });
   } else {
     const children = [];
     for (const u of urls.slice(0, 10)) {
-      const c = await igCreate(token, userId, { image_url: u, is_carousel_item: 'true' });
-      await igWaitReady(token, c);
+      const c = await igCreate(host, token, userId, { image_url: u, is_carousel_item: 'true' });
+      await igWaitReady(host, token, c);
       children.push(c);
     }
-    creationId = await igCreate(token, userId, { media_type: 'CAROUSEL', children: children.join(','), caption: item.caption });
+    creationId = await igCreate(host, token, userId, { media_type: 'CAROUSEL', children: children.join(','), caption: item.caption });
   }
-  await igWaitReady(token, creationId);
-  const pub = await igFetch(`https://graph.instagram.com/${IG_VERSION}/${userId}/media_publish`, {
+  await igWaitReady(host, token, creationId);
+  const pub = await igFetch(`${host}/${IG_VERSION}/${userId}/media_publish`, {
     method: 'POST',
     body: new URLSearchParams({ creation_id: creationId, access_token: token }),
   });

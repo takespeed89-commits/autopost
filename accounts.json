@@ -2,12 +2,23 @@
   "_説明": "投稿先の設定。enabled を false にするとその投稿先だけ止まる。鍵は GitHub の Secrets に入れる（名前は secretPrefix + _API_KEY など。README 参照）",
   "confa": {
     "name": "カンファ",
-    "x": { "enabled": true, "secretPrefix": "CONFA_X", "handle": "" },
-    "instagram": { "enabled": true, "secretPrefix": "CONFA_IG", "handle": "" }
+    "x": {
+      "enabled": true,
+      "secretPrefix": "CONFA_X",
+      "handle": ""
+    },
+    "instagram": {
+      "enabled": true,
+      "secretPrefix": "CONFA_IG",
+      "handle": ""
+    }
   },
   "plugrig": {
     "name": "PlugRig",
-    "x": { "enabled": true, "secretPrefix": "PLUGRIG_X", "handle": "" },
-    "instagram": { "enabled": true, "secretPrefix": "PLUGRIG_IG", "handle": "" }
+    "x": {
+      "enabled": true,
+      "secretPrefix": "PLUGRIG_X",
+      "handle": ""
+    }
   }
 }

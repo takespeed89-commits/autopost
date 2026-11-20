@@ -16,7 +16,7 @@ X と Instagram に、予約した投稿を自動で出す仕組み。文章と�
 | | X | Instagram |
 | --- | --- | --- |
 | カンファ | 毎日 12:10 | 月・水・金 20:30 |
-| PlugRig | 毎日 20:30 | 火・木・土 20:30 |
+| PlugRig | 毎日 20:30 | なし（X だけ） |
 
 - X の API は従量課金：投稿1本 0.015ドル、URL入りは 0.2ドル、画像のアップロード 0.005ドル。URL入りは各アカウント週1本までにしているので、2アカウントで月 2〜3ドル程度
 - Instagram の API は無料。GitHub Actions は公開リポジトリなら無料
@@ -28,9 +28,8 @@ X と Instagram に、予約した投稿を自動で出す仕組み。文章と�
 | --- | --- |
 | `CONFA_X_API_KEY` `CONFA_X_API_SECRET` `CONFA_X_ACCESS_TOKEN` `CONFA_X_ACCESS_SECRET` | カンファの X の鍵4つ |
 | `PLUGRIG_X_API_KEY` `PLUGRIG_X_API_SECRET` `PLUGRIG_X_ACCESS_TOKEN` `PLUGRIG_X_ACCESS_SECRET` | PlugRig の X の鍵4つ |
-| `CONFA_IG_ACCESS_TOKEN` | カンファの Instagram の鍵 |
-| `PLUGRIG_IG_ACCESS_TOKEN` | PlugRig の Instagram の鍵 |
-| `SECRETS_WRITE_TOKEN` | Instagram の鍵を自動で更新するための GitHub のトークン（このリポジトリだけ・Secrets の読み書きだけ） |
+| `CONFA_IG_ACCESS_TOKEN` | カンファの Instagram の鍵（システムユーザーのアクセストークン。期限なし） |
+| `CONFA_IG_USER_ID` | カンファの Instagram アカウントのID（数字） |
 
 鍵がまだないアカウントは、投稿せずに `posted/` へ「no-key」として流れる（あとで溜まった分が一気に出ることはない）。
 
@@ -40,11 +39,15 @@ X と Instagram に、予約した投稿を自動で出す仕組み。文章と�
 3. 「Keys and tokens」で API Key・API Secret と、Access Token・Access Token Secret を作る（権限を変えたあとに作り直す）
 4. クレジットを入れる（支払いの上限＝Spending limit も設定しておく）
 
-### 3. Instagram の鍵（アカウントごと）
-1. Instagram アプリでアカウントを「プロアカウント」（ビジネスかクリエイター）に切り替える
-2. Meta for Developers でアプリを作り、「Instagram ログインによる API 設定」を追加
-3. 「アクセストークンを生成」でアカウントを追加し、出てきたトークンを Secrets に入れる（1つのアプリに2アカウントとも追加してよい）
-4. トークンは60日で切れるが、`refresh-ig-token.yml` が月2回自動で延長する
+### 3. Instagram の鍵（カンファ）
+Meta の新しいアプリは「ビジネス向け Facebook ログイン（統合ログイン）」で、鍵はシステムユーザーのアクセストークン（期限なし）になる。
+1. Instagram アプリでアカウントを「プロアカウント（ビジネス）」に切り替える
+2. Meta for Developers のアプリ「Backroom Autopost」（ビジネスポートフォリオ Backroom Studio にひも付け済み）
+3. ビジネス設定 → Instagram プロフィール →「追加」でカンファの Instagram を追加
+4. ビジネス設定 → システムユーザーで管理者のシステムユーザーを作り、カンファの Instagram とアプリを割り当てて、`instagram_basic` と `instagram_content_publish` のトークンを作る
+5. トークンを `CONFA_IG_ACCESS_TOKEN`、Instagram アカウントのIDを `CONFA_IG_USER_ID` に入れる
+
+ラウンド（@round.confa）の Instagram もポートフォリオに入っているが、自動投稿はしない。
 
 ### 4. 試しに動かす
 Actions →「予約投稿」→ Run workflow（「試しに動かす」にチェック）。何が投稿されるかが記録に出る。
