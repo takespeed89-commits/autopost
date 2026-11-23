@@ -7,5 +7,11 @@
     "images": [
       "media/20261124-plugrig-1.jpg"
     ]
+  },
+  "result": {
+    "x": {
+      "status": "no-key",
+      "note": "鍵（PLUGRIG_X_*）が未設定"
+    }
   }
 }
