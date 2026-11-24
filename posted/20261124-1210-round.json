@@ -14,8 +14,9 @@
   },
   "result": {
     "instagram": {
-      "tries": 2,
-      "lastError": "Instagram 400 {\"message\":\"API access blocked.\",\"code\":200,\"type\":\"OAuthException\",\"error_subcode\":5258005,\"fbtrace_id\":\"Au17b9VBJ1HWHp35tjdh6b4\"}"
+      "status": "failed",
+      "error": "Instagram 400 {\"message\":\"API access blocked.\",\"code\":200,\"type\":\"OAuthException\",\"error_subcode\":5258005,\"fbtrace_id\":\"AIo87mFagzC4bwCHl-GBItm\"}",
+      "tries": 3
     }
   }
 }
