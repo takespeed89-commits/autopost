@@ -4,5 +4,11 @@
   "theme": "英語・バンドル",
   "x": {
     "text": "Black Friday is this Friday.\n\nBefore you grab that bundle, check what you already own. PlugRig compares bundle contents with your collection and tells you what you'd be buying twice. #musicproduction"
+  },
+  "result": {
+    "x": {
+      "status": "no-key",
+      "note": "鍵（PLUGRIG_X_*）が未設定"
+    }
   }
 }
