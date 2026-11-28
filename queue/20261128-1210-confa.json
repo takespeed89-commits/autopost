@@ -1,6 +1,6 @@
 {
   "account": "confa",
-  "at": "2026-11-27T20:30:00+09:00",
+  "at": "2026-11-28T12:10:00+09:00",
   "theme": "出品の流れ",
   "instagram": {
     "caption": "カンファの出品は4ステップです。\n\n1. 無料登録\n2. 資格確認（免許証の画像を提出。確認後に削除します）\n3. 記事エディタで作成\n4. 価格を決めて公開\n\n登録と出品は無料、販売手数料は一律15%（税込）です。振込手数料（1回330円）など、くわしくはプロフィールのリンクから「出品について」をご覧ください。\n\n#医療従事者 #看護師 #臨床工学技士 #医療従事者と繋がりたい #カンファ",
@@ -10,11 +10,5 @@
       "media/20261127-confa-3.jpg",
       "media/20261127-confa-4.jpg"
     ]
-  },
-  "result": {
-    "instagram": {
-      "tries": 2,
-      "lastError": "Instagram 400 {\"message\":\"API access blocked.\",\"code\":200,\"type\":\"OAuthException\",\"error_subcode\":5258005,\"fbtrace_id\":\"Abu_LdR3JwBLUyZTw7myuWd\"}"
-    }
   }
 }
