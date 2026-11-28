@@ -4,5 +4,11 @@
   "theme": "英語・記録",
   "x": {
     "text": "Bought a bundle yesterday?\n\nLog it now while the receipt email is still easy to find. Paste the email or a screenshot into PlugRig and AI fills in the details."
+  },
+  "result": {
+    "x": {
+      "status": "no-key",
+      "note": "鍵（PLUGRIG_X_*）が未設定"
+    }
   }
 }
