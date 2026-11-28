@@ -26,11 +26,12 @@
   "round": {
     "name": "ラウンド",
     "instagram": {
-      "enabled": true,
+      "enabled": false,
       "secretPrefix": "ROUND_IG",
       "tokenSecret": "CONFA_IG_ACCESS_TOKEN",
       "userId": "17841438801486999",
-      "handle": "round.confa"
+      "handle": "round.confa",
+      "note": "2026-11-28 round.confa がInstagram側で停止され異議申し立て中。復活してビジネスに入れ直したら true に戻す"
     }
   }
 }
